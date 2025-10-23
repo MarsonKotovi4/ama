@@ -3,8 +3,8 @@
 
 # ---- НАСТРОЙКИ (твоё из сообщения) ----
 export RIG="NAME"
-export SECRET="cryptoAMA"
-export WALLET="7Y18PG1kYxnwuNajvxc5LpHS3WKdznFJNfbzC5PxZJNLu24UDBjpYfWAW34RjKnNza"
+export SECRET="cryptoEDD"
+export WALLET="7bmaptATndxbPYfCkNrpWx6BZnSPQULX7Y7DtbQtypZp26ETkB8Uj5S6i8AsiaL5vR"
 
 # какие карты включаем (физические индексы Hive/nvidia-smi)
 export CUDA_VISIBLE_DEVICES=6,7,8,9,10,11
