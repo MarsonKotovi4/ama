@@ -1,4 +1,6 @@
 #!/bin/bash
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export HOME=/home/user
 # Запуск AMA/Poolama-майнера на физических GPU 6–11 в screen "ama"
 
 export RIG="NAME"
