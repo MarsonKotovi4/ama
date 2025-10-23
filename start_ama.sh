@@ -8,7 +8,7 @@ export SECRET="cryptoAMA"
 export WALLET="7Y18PG1kYxnwuNajvxc5LpHS3WKdznFJNfbzC5PxZJNLu24UDBjpYfWAW34RjKnNza"
 export CUDA_VISIBLE_DEVICES=6,7,8,9,10,11
 
-GPU_BIN="/home/user/gpu"
+GPU_BIN="/home/user/ama_miner/gpu"
 LOG="/home/user/ama.log"
 
 if [ ! -x "$GPU_BIN" ]; then
