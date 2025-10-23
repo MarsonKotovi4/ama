@@ -1,36 +1,48 @@
 #!/bin/bash
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-export HOME=/home/user
-# Запуск AMA/Poolama-майнера на физических GPU 6–11 в screen "ama"
+# -------------------------------
+#  AMA Miner manual start script
+#  Без screen, без автозапуска
+# -------------------------------
 
-# ---- НАСТРОЙКИ (твоё из сообщения) ----
+# Настройки
 export RIG="NAME"
-export SECRET="cryptoEDD"
-export WALLET="7bmaptATndxbPYfCkNrpWx6BZnSPQULX7Y7DtbQtypZp26ETkB8Uj5S6i8AsiaL5vR"
+export SECRET="cryptoAMA"
+export WALLET="7Y18PG1kYxnwuNajvxc5LpHS3WKdznFJNfbzC5PxZJNLu24UDBjpYfWAW34RjKnNza"
 
-# какие карты включаем (физические индексы Hive/nvidia-smi)
+# Указываем какие карты использовать
 export CUDA_VISIBLE_DEVICES=6,7,8,9,10,11
-# ----------------------------------------
 
-GPU_BIN="/home/user/gpu"
-LOG="/home/user/ama.log"
+# Пути
+WORKDIR="/home/user/ama_miner"
+GPU_BIN="$WORKDIR/gpu"
+LOG="$WORKDIR/ama.log"
 
-# если бинаря ещё нет — подсказываем, как скачать
+# Проверяем, существует ли бинарь
 if [ ! -x "$GPU_BIN" ]; then
-  echo "[!] Не найден исполняемый $GPU_BIN"
-  echo "    Скачай его:  wget -O $GPU_BIN https://poolama.com/dl/gpu && chmod +x $GPU_BIN"
+  echo "[!] Не найден исполняемый файл $GPU_BIN"
+  echo "    Скачай его командой:"
+  echo "    wget -O $GPU_BIN https://poolama.com/dl/gpu && chmod +x $GPU_BIN"
   exit 1
 fi
 
-# убьём предыдущую сессию screen с именем ama (если была), чтобы не плодить дубликаты
-if screen -list | grep -q "\.ama"; then
-  screen -S ama -X quit || true
-  sleep 1
+# Если уже запущен — останавливаем
+if pgrep -f "$GPU_BIN" > /dev/null; then
+  echo "[i] Уже запущен процесс майнера, останавливаем старый..."
+  pkill -f "$GPU_BIN"
+  sleep 2
 fi
 
-# стартуем в screen (detached)
-screen -dmS ama bash -lc "nohup \"$GPU_BIN\" >> \"$LOG\" 2>&1"
+# Запуск майнера в фоне без screen
+echo "[+] Запускаем AMA майнер..."
+nohup "$GPU_BIN" > "$LOG" 2>&1 &
 
-echo "✅ Майнер запущен в screen 'ama'. Лог: $LOG"
-echo "  Подключиться:  screen -r ama    | Выйти не останавливая: Ctrl+A D"
-echo "  Смотреть лог:   tail -f $LOG"
+PID=$!
+sleep 1
+
+if ps -p $PID > /dev/null; then
+  echo "✅ Майнер успешно запущен (PID $PID)"
+  echo "   Лог: $LOG"
+  echo "   Чтобы проверить: tail -f $LOG"
+else
+  echo "❌ Ошибка: процесс не запущен. Проверь $LOG"
+fi
